@@ -1,0 +1,156 @@
+proc buttonPressed(int $val) {
+			switch($val) {
+			case 1:
+			    string $curves[] = `ls "curveShape*"`;
+                select $curves;
+                move -10 0 -5;
+                rotate 90 0 0;
+                scale 0.003 0.003 0.003;    
+				print( "button1 pressed\n" );
+				break;
+			case 2:		
+			print("$floatValue: \n");
+			    string  $allObjects[];
+                string  $obj;
+                $allObjects = `ls -type curveShape`;
+                 for ( $obj in $allObjects )
+                {
+                 extrude -ch true -rn false -po 1 -et 0 -upn 0 -d 0 1 0 -length 2 -rotation 0 -scale 1 -dl 1 ($obj) ;
+                };
+
+				print( "button2 pressed\n" );
+				break;
+			case 3:
+			// creates a variable result = opens a filedialog with formaqt of a text file
+		string $result = `fileDialog -directoryMask "*.txt"`;
+       	        {
+       	            int $fileId = `fopen $result "r"`;
+                    string $cmd = "curve -d 1 ";
+                    if (!`filetest -f $result`) error "Specified File not Found!";
+                    while (!`feof $fileId`)
+                {
+                    string $nextLine = `fgetline $fileId`;
+                    // tokenize the line - we should get 3 floats?
+                    string $tokens[];
+                    tokenize $nextLine ", " $tokens;
+                    
+                    float $x = $tokens[0];
+                    float $y = $tokens[1];
+                    float $z = $tokens[2];
+                    // now just do something with our coords:
+                    //spaceLocator -p $x $y $z;
+                    if($x || $y || $z != 0)
+                    {
+                    $cmd += (" -p "+$x+" "+$y+" "+$z);
+                    }
+                }
+                    eval $cmd;
+                    fclose $fileId;
+                };
+        	        
+        	       
+                   
+				print( "button3 pressed\n" );
+				break;
+			case 4:
+				string $allTransforms[] = `ls "curve*"`;
+				select $allTransforms;
+				planarSrf -ch 1 -d 3 -ko 0 -tol 0.01 -rn 0 -po 1 ($allTransforms);
+
+				select -cl;
+				string $trimmedsurface[] = `ls "planarTrimmedSurfaceShape*"`;
+				string $walls[] = `ls "extrudedSurfaceShape*"`;
+				select $walls;
+				select $trimmedsurface;
+				polyUnite -ch 1 -mergeUVSets 1 $walls $trimmedsurface;
+				print("button4 Pressed\n");
+				break;
+			case 5:
+				string $Faces[] = `ls "extrudedSurface*"`;
+				select $Faces;
+				xform -cp $Faces;
+				print("button5 Pressed\n");
+				break;
+			default:
+				break;
+			}
+		}
+
+		{
+			// create a window
+			window -title "DXF Importer";
+			
+			columnLayout -adjustableColumn true;
+			
+			    frameLayout -collapsable true -label "Select file" -borderStyle "etchedIn" ;
+				// define the layout of controls added 
+				// to the window.
+				columnLayout -columnAttach "both" 5 -rowSpacing 5 -columnAlign "center";
+					// create a few buttons
+					button -label "load" -c "buttonPressed(3);";
+					 text -label "Select a converted DXF file Note: ONLY .TXT" -align "right" -w 350;
+					
+					setParent..;
+					
+			setParent..;
+					
+			frameLayout -collapsable true -label "Select and centre curves" -borderStyle "etchedIn";
+			    
+			    columnLayout -columnAttach "both" 5 -rowSpacing 5 -columnAlign "center" ;
+					
+                    button -label "Centre" -c "buttonPressed(1);";
+                     text -label "Selects all the objects and centre them" -align "right" -w 340;
+                    
+                    setParent..;
+                    
+             setParent..;
+                    
+            frameLayout -collapsable true -label "Extrude curves to turn into 3d object" -borderStyle "etchedIn";
+            
+                columnLayout -columnAttach "both" 5 -rowSpacing 5 -columnAlign "center";
+                
+                    button -label "Extrude" -c "buttonPressed(2);";
+                    text -label "Extrudes all the curves and turns them into a 3D model" -align "right" -w 375;
+                    
+                     setParent..;
+                    
+             setParent..;
+                    
+            frameLayout -collapsable true -label "Add floor" -borderStyle "etchedIn";
+                
+                columnLayout -columnAttach "both" 5 -rowSpacing 5 -columnAlign "center";
+					
+					button -label "Add Floor" -c "buttonPressed(4);";
+					text -label "Add a floor or bottom face and combines all objects" -align "right" -w 375;
+					
+					 setParent..;
+                    
+             setParent..;
+					
+			frameLayout -collapsable true -label "Centre Pivot" -borderStyle "etchedIn";
+                
+                columnLayout -columnAttach "both" 5 -rowSpacing 5 -columnAlign "center";
+                
+					button -label "Centre Pivot" -c "buttonPressed(5);"; 
+					text -label "Centres the pivot relatives to the model" -align "right" -w 340;
+					 setParent..;
+                    
+             setParent..; 
+					
+			frameLayout -collapsable true -label "Change colour of Object" -borderStyle "etchedIn";
+                
+                columnLayout -rowSpacing 5;  	     
+    	             
+    	            select -r lambert1;
+                   
+                   attrColorSliderGrp -at ("lambert1.color") -cal  1 "left";  
+                    text -label "Changes the colour of the whole model" -align "right" -w 340;
+                    setParent..;
+                    
+             setParent..;       
+
+
+
+			// show the window we last created
+			showWindow;
+		};
