@@ -1,20 +1,30 @@
+// Procedure button pressed
 proc buttonPressed(int $val) {
+// switch statement for the buttons
 			switch($val) {
 			case 1:
+// creates a variable curves and put all curveshapes in the list
 			    string $curves[] = `ls "curveShape*"`;
+// selects the list 
                 select $curves;
+// moves, rotates and scales 
                 move -10 0 -5;
                 rotate 90 0 0;
                 scale 0.003 0.003 0.003;    
+// prints button1 pressed
 				print( "button1 pressed\n" );
 				break;
 			case 2:		
 			print("$floatValue: \n");
 			    string  $allObjects[];
+// creates a variable obj
                 string  $obj;
+// creates a variable curves and put all curveshapes in the list
                 $allObjects = `ls -type curveShape`;
+// for loop which checks for all obj in allobjects
                  for ( $obj in $allObjects )
                 {
+// extrudes all curves
                  extrude -ch true -rn false -po 1 -et 0 -upn 0 -d 0 1 0 -length 2 -rotation 0 -scale 1 -dl 1 ($obj) ;
                 };
 
@@ -30,20 +40,22 @@ proc buttonPressed(int $val) {
                     while (!`feof $fileId`)
                 {
                     string $nextLine = `fgetline $fileId`;
-                    // tokenize the line - we should get 3 floats?
+                    // tokenize the line - we get 3 floats
                     string $tokens[];
                     tokenize $nextLine ", " $tokens;
                     
                     float $x = $tokens[0];
                     float $y = $tokens[1];
                     float $z = $tokens[2];
-                    // now just do something with our coords:
-                    //spaceLocator -p $x $y $z;
+                   
+                   // ignores white space
                     if($x || $y || $z != 0)
                     {
+// creates a curve using the file imported
                     $cmd += (" -p "+$x+" "+$y+" "+$z);
                     }
                 }
+// closes fileid
                     eval $cmd;
                     fclose $fileId;
                 };
@@ -53,8 +65,10 @@ proc buttonPressed(int $val) {
 				print( "button3 pressed\n" );
 				break;
 			case 4:
+// creates a variable  and put all curve in the list
 				string $allTransforms[] = `ls "curve*"`;
 				select $allTransforms;
+// creates the floor using a planarsuface
 				planarSrf -ch 1 -d 3 -ko 0 -tol 0.01 -rn 0 -po 1 ($allTransforms);
 
 				select -cl;
@@ -62,12 +76,15 @@ proc buttonPressed(int $val) {
 				string $walls[] = `ls "extrudedSurfaceShape*"`;
 				select $walls;
 				select $trimmedsurface;
+// combines walls list and trimmedsurface list to one object
 				polyUnite -ch 1 -mergeUVSets 1 $walls $trimmedsurface;
 				print("button4 Pressed\n");
 				break;
 			case 5:
+// creates a list Faces which holds all the extrudedsurfaces
 				string $Faces[] = `ls "extrudedSurface*"`;
 				select $Faces;
+// centres pivot
 				xform -cp $Faces;
 				print("button5 Pressed\n");
 				break;
@@ -77,19 +94,20 @@ proc buttonPressed(int $val) {
 		}
 
 		{
-			// create a window
+			// create a window and names it
 			window -title "DXF Importer";
 			
 			columnLayout -adjustableColumn true;
 			
 			    frameLayout -collapsable true -label "Select file" -borderStyle "etchedIn" ;
-				// define the layout of controls added 
-				// to the window.
+				// define the layout of controls added to the window
+				
 				columnLayout -columnAttach "both" 5 -rowSpacing 5 -columnAlign "center";
-					// create a few buttons
+					// create a button and text
+// calls buttonpressed 3 from the cases
 					button -label "load" -c "buttonPressed(3);";
 					 text -label "Select a converted DXF file Note: ONLY .TXT" -align "right" -w 350;
-					
+					// set a parent for the collapsable
 					setParent..;
 					
 			setParent..;
