@@ -33,6 +33,7 @@ Using the tool in Maya and load the converted file.
 5, Click Centre Pivot (Recommended but optional)
 6, click the Colour swatch to change the colour of the model.
 
+You can access The source code for the File parser in -> \Creative-Project-master\Project\DXF File Parser Source Files
 
 Enjoy :)
 
