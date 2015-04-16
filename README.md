@@ -1,6 +1,10 @@
 # Creative-Project
 Final Creative project 
 
+Creating a DXF File Parser using C# 
+then in Maya converting the file into
+a 3D scene using Maya Embedded Language (MEL).
+
 Mark Griffiths
 11007327
 
