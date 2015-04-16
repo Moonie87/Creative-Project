@@ -1,3 +1,9 @@
+// Peogrammer : Mark Griffiths
+// Date : 		16/04/2015
+// Description: Tool which laods ina txt file and creates curves
+				using this tool you can convert the curves
+				into a 3D model.
+
 // Procedure button pressed
 proc buttonPressed(int $val) {
 // switch statement for the buttons
@@ -31,7 +37,7 @@ proc buttonPressed(int $val) {
 				print( "button2 pressed\n" );
 				break;
 			case 3:
-			// creates a variable result = opens a filedialog with formaqt of a text file
+// creates a variable result = opens a filedialog with formaqt of a text file
 		string $result = `fileDialog -directoryMask "*.txt"`;
        	        {
        	            int $fileId = `fopen $result "r"`;
@@ -40,7 +46,7 @@ proc buttonPressed(int $val) {
                     while (!`feof $fileId`)
                 {
                     string $nextLine = `fgetline $fileId`;
-                    // tokenize the line - we get 3 floats
+ // tokenize the line - we get 3 floats
                     string $tokens[];
                     tokenize $nextLine ", " $tokens;
                     
@@ -48,7 +54,7 @@ proc buttonPressed(int $val) {
                     float $y = $tokens[1];
                     float $z = $tokens[2];
                    
-                   // ignores white space
+ // ignores white space
                     if($x || $y || $z != 0)
                     {
 // creates a curve using the file imported

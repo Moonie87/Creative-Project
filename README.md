@@ -28,7 +28,7 @@ Navigate to - \Creative-Project-master\Project\Maya Tool - and select the DXF.ME
 4, the code for the tool will appear -> click File -> Save script to Shelf -> choose a name -> click OK
 5, Navigate to the new tool in the toolbar it will be names whatever you named it. Click it to start it
 
-Using the tool in Maya and load the converted file.
+Using the tool in Maya and load the converted file. note: This tool canbe used in any version of 
 
 1, to load you converted file Click load -> navigate to where you saved your file click -> Open
 2, Click the Centre button to centre the model.
